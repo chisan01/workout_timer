@@ -17,14 +17,21 @@ body * {
 main {
 	margin: 30px;
 	background-color: #84ceeb;
-	width: 450px;
+	width: min(calc(100vw - 60px), 450px);
 	height: calc(100vh - 60px);
+	box-shadow: 1px 1px 10px 0.1px gray;
+	overflow-y: scroll;
+}
+main::-webkit-scrollbar {
+	display: none;
+}
+.scroll {
+	width: inherit;
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
+	justify-content: flex-start;
 	align-items: center;
 	position: relative;
-	box-shadow: 1px 1px 10px 0.1px gray;
 }
 
 .timer {
@@ -73,7 +80,7 @@ main {
 	display: flex;
 	justify-content: space-between;
 	width: 80%;
-	margin-bottom: 2rem;
+	margin: 2rem 0;
 }
 .header > * {
 	height: 100%;
