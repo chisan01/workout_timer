@@ -1,11 +1,11 @@
-let count = 0;
-const setCount = document.querySelector(".counter > p");
-const nextSetBtn = document.querySelector(".counter");
-const nextExerciseBtn = document.querySelector(".next");
-const timerCount = document.querySelector(".timer2 > p");
-const alarmSound = document.querySelector("audio");
+let setCount = 0;
+const setCountText = document.querySelector(".setCountText");
+const nextSetBtn = document.querySelector(".nextSet");
+const nextExerciseBtn = document.querySelector(".nextExercise");
+const timerDisplay = document.querySelector(".timerDisplay");
+const alarm = document.querySelector(".alarmSound");
 const stopBtn = document.querySelector(".stop");
-let timerRunning = false;
+let isTimerRunning = false;
 
 class Time {
 	constructor(minute, second) {
@@ -29,68 +29,50 @@ class Time {
 	}
 }
 
-const startNewExercise = () => {
-	count = 0;
-	setCount.textContent = "새로운 운동 시작!";
-	// 운동 간 휴식시간 타이머 작동
-	const time = new Time(1, 30); // 1분 30초
-	stopBtn.style.display = "block";
-	timerRunning = true;
-	const timer = setInterval(() => {
+function startTimer(minute, second) {
+	const time = new Time(minute, second);
+	stopBtn.style.display = "block"; // 정지
+	isTimerRunning = true;
+	const runTimer = setInterval(() => {
 		if (time.minute === 0 && time.second === 0) {
-			alarmSound.play();
-			alert("휴식 끝!");
-            clearInterval(timer);
-            timerCount.textContent = "00:00";
+			alarm.play();
+            timerDisplay.textContent = "00:00";
 			stopBtn.style.display = "none";
-			timerRunning = false;
+			isTimerRunning = false;
+			alert("휴식 끝!");
+			clearInterval(runTimer);
         }
         else {
             time.decrease();
-            timerCount.textContent = time.toString();
+            timerDisplay.textContent = time.toString();
         }
 	}, 1000);
+	
 	stopBtn.addEventListener('click', event => {
-		clearInterval(timer);
-		timerCount.textContent = "00:00";
+		clearInterval(runTimer);
 		stopBtn.blur();
 		stopBtn.style.display = "none";
-		timerRunning = false;
-	})
+		timerDisplay.textContent = "00:00";
+		isTimerRunning = false;
+	});
+}
+
+const startNewExercise = () => {
+	setCount = 0;
+	setCountText.textContent = "새로운 운동 시작!";
+	// 운동 간 휴식시간 타이머 작동
+	startTimer(1, 30); // 1분 30초
 };
 
 const finishSet = () => {
-	count++;
-    setCount.textContent = `${count}번째 세트 완료`;
-    // 세트 간 휴식시간 타이머 작동
-	const time = new Time(0, 30); // 30초
-	stopBtn.style.display = "block";
-	timerRunning = true;
-	const timer = setInterval(() => {
-		if (time.minute === 0 && time.second === 0) {
-			alarmSound.play();
-			alert("휴식 끝!");
-            clearInterval(timer);
-            timerCount.textContent = "00:00";
-			stopBtn.style.display = "none";
-			timerRunning = false;
-        }
-        else {
-            time.decrease();
-            timerCount.textContent = time.toString();
-        }
-	}, 1000);
-	stopBtn.addEventListener('click', event => {
-		clearInterval(timer);
-		timerCount.textContent = "00:00";
-		stopBtn.blur();
-		stopBtn.style.display = "none";
-		timerRunning = false;
-	})
+	setCount++;
+    setCountText.textContent = `${setCount}번째 세트 완료`;
+    // 세트 간 휴식시간 타이머 작동	
+	startTimer(0, 30); // 30초
 };
 
 document.addEventListener("keydown", (event) => {
-	if (timerRunning) return;
+	if (isTimerRunning) return;
 	if (event.key == "Enter" || event.key == " ") {
 		finishSet();
 	}
@@ -100,12 +82,12 @@ document.addEventListener("keydown", (event) => {
 });
 
 nextExerciseBtn.addEventListener("click", (event) => {
-	if (timerRunning) return;
+	if (isTimerRunning) return;
 	startNewExercise();
 	nextExerciseBtn.blur();
 });
 nextSetBtn.addEventListener("click", (event) => {
-	if (timerRunning) return;
+	if (isTimerRunning) return;
 	finishSet();
 	nextSetBtn.blur();
 });

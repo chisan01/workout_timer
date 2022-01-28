@@ -10,6 +10,7 @@ body {
 	align-items: center;
 	background-color: #5ab9ea;
 }
+
 body * {
 	border-radius: 12px;
 }
@@ -57,7 +58,7 @@ main::-webkit-scrollbar {
 	justify-content: center;
 	align-items: center;
 }
-.timer2 > p {
+.timerDisplay {
 	font-size: 80px;
 	color: #c1c8e4;
 	font-weight: bold;
@@ -93,14 +94,14 @@ main::-webkit-scrollbar {
 	justify-content: center;
 	align-items: center;
 }
-.counter > p {
+.nextSet > p {
 	font-size: 22px;
 	font-weight: bold;
 }
-.next > p {
+.nextExercise > p {
 	font-size: 22px;
 }
-.counter:hover,
-.next:hover {
+.nextSet:hover,
+.nextExercise:hover {
 	background-color: hsl(200, 39%, 83%);
 }
