@@ -5,6 +5,7 @@ const nextExerciseBtn = document.querySelector(".next");
 const timerCount = document.querySelector(".timer2 > p");
 const alarmSound = document.querySelector("audio");
 const stopBtn = document.querySelector(".stop");
+let timerRunning = false;
 
 class Time {
 	constructor(minute, second) {
@@ -34,6 +35,7 @@ const startNewExercise = () => {
 	// 운동 간 휴식시간 타이머 작동
 	const time = new Time(1, 30); // 1분 30초
 	stopBtn.style.display = "block";
+	timerRunning = true;
 	const timer = setInterval(() => {
 		if (time.minute === 0 && time.second === 0) {
 			alarmSound.play();
@@ -41,6 +43,7 @@ const startNewExercise = () => {
             clearInterval(timer);
             timerCount.textContent = "00:00";
 			stopBtn.style.display = "none";
+			timerRunning = false;
         }
         else {
             time.decrease();
@@ -52,6 +55,7 @@ const startNewExercise = () => {
 		timerCount.textContent = "00:00";
 		stopBtn.blur();
 		stopBtn.style.display = "none";
+		timerRunning = false;
 	})
 };
 
@@ -61,6 +65,7 @@ const finishSet = () => {
     // 세트 간 휴식시간 타이머 작동
 	const time = new Time(0, 30); // 30초
 	stopBtn.style.display = "block";
+	timerRunning = true;
 	const timer = setInterval(() => {
 		if (time.minute === 0 && time.second === 0) {
 			alarmSound.play();
@@ -68,6 +73,7 @@ const finishSet = () => {
             clearInterval(timer);
             timerCount.textContent = "00:00";
 			stopBtn.style.display = "none";
+			timerRunning = false;
         }
         else {
             time.decrease();
@@ -79,10 +85,12 @@ const finishSet = () => {
 		timerCount.textContent = "00:00";
 		stopBtn.blur();
 		stopBtn.style.display = "none";
+		timerRunning = false;
 	})
 };
 
 document.addEventListener("keydown", (event) => {
+	if (timerRunning) return;
 	if (event.key == "Enter" || event.key == " ") {
 		finishSet();
 	}
@@ -92,10 +100,12 @@ document.addEventListener("keydown", (event) => {
 });
 
 nextExerciseBtn.addEventListener("click", (event) => {
+	if (timerRunning) return;
 	startNewExercise();
 	nextExerciseBtn.blur();
 });
 nextSetBtn.addEventListener("click", (event) => {
+	if (timerRunning) return;
 	finishSet();
 	nextSetBtn.blur();
 });
