@@ -3,47 +3,36 @@ const timerDisplay = document.querySelector(".timerDisplay");
 const alarm = document.querySelector(".alarmSound");
 const nextBtn = document.querySelector(".next");
 const stopBtn = document.querySelector(".stop");
+
 let isTimerRunning = false;
-
-class Time {
-	constructor(minute, second) {
-		this.minute = minute;
-		this.second = second;
-	}
-	// HH:MM 형식으로 표시
-	toString() {
-		let minute = this.minute;
-		if (minute < 10) minute = "0" + minute;
-		let second = this.second;
-		if (second < 10) second = "0" + second;
-		return minute + ":" + second;
-	}
-	decrease() {
-		this.second--;
-		if (this.second < 0) {
-			this.minute--;
-			this.second += 60;
-		}
-	}
-}
-
-let exerciseName = "새로운 운동";
-const setIntervalTime = new Time(0, 3);
-const exerciseIntervalTime = new Time(0, 10);
-let setGoal = 3;
+let startTime;
 let setCount = 1;
 
-function startTimer(min, sec) {
-	const time = new Time(min, sec);
+let setGoal = 5;
+let setIntervalTime = 30;
+let exerciseIntervalTime = 1 * 60 + 30;
+let exerciseName = "새로운 운동";
+
+function secondToString(second) {
+	let minute = (second / 60).toFixed(0);
+	second %= 60;
+	if (minute < 10) minute = "0" + minute;
+	if (second < 10) second = "0" + second;
+	return minute + ":" + second;
+}
+
+function startTimer(timerSecond) {
 	nextBtn.blur();
 	stopBtn.style.display = "block";
 	nextBtn.style.display = "none";
 	isTimerRunning = true;
+	startTime = Date.now();
 
 	const runTimer = setInterval(() => {
-		time.decrease();
-		timerDisplay.textContent = time.toString();
-		if (time.minute === 0 && time.second === 0) {
+		let remainSecond = (timerSecond - (Date.now() - startTime) / 1000).toFixed(0);
+		console.log(remainSecond);
+		timerDisplay.textContent = secondToString(remainSecond);
+		if (remainSecond <= 0) {
 			alarm.play();
 			stopTimer();
 			alert("휴식 끝!");
@@ -52,7 +41,6 @@ function startTimer(min, sec) {
 
 	stopBtn.addEventListener("click", (event) => {
 		stopBtn.blur();
-		timerDisplay.textContent = "00:00";
 		stopTimer();
 	});
 
@@ -61,27 +49,27 @@ function startTimer(min, sec) {
 		nextBtn.style.display = "block";
 		isTimerRunning = false;
 		clearInterval(runTimer);
-		if (setCount == setGoal) {
+		if (setCount === setGoal) {
 			setCount = 1;
 			mainText.textContent = mainText.textContent = `${exerciseName} 시작!`;
-		}
-		else {
+		} else {
 			setCount++;
 			mainText.textContent = `${exerciseName} ${setCount} 세트 시작`;
 		}
+		timerDisplay.textContent = "00:00";
 	};
 }
 
 // 마지막 세트 완료
 const startNewExercise = function () {
 	mainText.textContent = `${exerciseName} ${setCount} 세트 완료`;
-	startTimer(exerciseIntervalTime.minute, exerciseIntervalTime.second);
+	startTimer(exerciseIntervalTime);
 };
 
 // 세트 완료
 const finishSet = function () {
 	mainText.textContent = `${exerciseName} ${setCount} 세트 완료`;
-	startTimer(setIntervalTime.minute, setIntervalTime.second);
+	startTimer(setIntervalTime);
 };
 
 document.addEventListener("keydown", (event) => {
