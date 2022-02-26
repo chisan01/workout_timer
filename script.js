@@ -14,7 +14,7 @@ let exerciseIntervalTime = 1 * 60 + 30;
 let exerciseName = "새로운 운동";
 
 function secondToString(second) {
-	let minute = (second / 60).toFixed(0);
+	let minute = Math.floor(second / 60);
 	second %= 60;
 	if (minute < 10) minute = "0" + minute;
 	if (second < 10) second = "0" + second;
