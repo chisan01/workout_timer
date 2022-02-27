@@ -54,43 +54,41 @@ function startTimer(timerSecond) {
 }
 
 // 마지막 세트 완료
-const startNewExercise = function () {
+async function startNewExercise() {
 	mainText.textContent = `${exerciseName} ${setCount} 세트 완료`;
-	startTimer(exerciseIntervalTime).then(() => {
-		setCount = 1;
-		mainText.textContent = mainText.textContent = `${exerciseName} 시작!`;
-		alert("휴식 완료!");
-	});
-};
+	await startTimer(exerciseIntervalTime);
+	setCount = 1;
+	mainText.textContent = mainText.textContent = `${exerciseName} 시작!`;
+	alert("휴식 완료!");
+}
 
 // 세트 완료
-const finishSet = function () {
+async function finishSet() {
 	mainText.textContent = `${exerciseName} ${setCount} 세트 완료`;
-	startTimer(setIntervalTime).then(() => {
-		setCount++;
-		mainText.textContent = `${exerciseName} ${setCount} 세트 시작`;
-		alert("휴식 완료!");
-	});
-};
+	await startTimer(setIntervalTime);
+	setCount++;
+	mainText.textContent = `${exerciseName} ${setCount} 세트 시작`;
+	alert("휴식 완료!");
+}
 
 document.addEventListener("keydown", (event) => {
 	if (isTimerRunning) return;
-	if (event.key == "Enter" || event.key == " ") {
-		if (setCount === setGoal) {
-			startNewExercise();
-		} else {
-			finishSet();
-		}
+	if (event.key !== "Enter" && event.key !== " ") return;
+	
+	if (setCount === setGoal) {
+		startNewExercise();
+	} else {
+		finishSet();
 	}
 });
 
 nextBtn.addEventListener("click", (event) => {
 	nextBtn.blur();
 	if (isTimerRunning) return;
+	
 	if (setCount === setGoal) {
 		startNewExercise();
 	} else {
 		finishSet();
 	}
-	nextBtn.blur();
 });
